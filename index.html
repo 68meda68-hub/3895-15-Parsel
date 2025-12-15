@@ -108,7 +108,7 @@
       color: #fff;
       font-size: 11px;
       font-weight: 500;
-      font-family: "Tahoma;
+      font-family: "Tahoma";
       padding: 10px 10px;
       background: rgba(0,0,0, 1);
       border-radius: 6px;
@@ -125,6 +125,21 @@
       margin-top: 4px;
       display: block;
     }
+
+.custom-popup {
+  color: orange;
+}
+
+.popup-subtext {
+  display: block;       /* alt alta gelsin diye */
+  color: #fff;          /* alt yazılar beyaz */
+  font-size: 13px;
+}
+
+.popup-title {
+  color: orange;
+  font-weight: bold;
+}
 	
 #zoom-level {
 	display: none;
@@ -476,11 +491,11 @@ const popup = new mapboxgl.Popup({ offset: [0, -50], closeButton: false, closeOn
       .setLngLat(centerCoord)
       .setHTML(`
         <div class="custom-popup">
-                SATILIK İMARLI PARSEL<br />
+                <span class="popup-title">SATILIK İMARLI PARSEL</span><br />
                 <span class="popup-subtext">İmar: E = 0.90 Hmax = 3 Kat</span>
                 <span class="popup-subtext">Çiftlik Mahallesi 3895/15</span>
 				<span class="popup-subtext">Villa Yapmaya Elverişli</span>
-                </div>
+        </div>
       `)
       .addTo(map);
 	  
