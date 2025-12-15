@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+	  <meta charset="UTF-8" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1" />
+	  <!-- 🔹 Sosyal medya ön izleme meta etiketleri -->
+	  <meta property="og:title" content="Zafer Mahallesi 4925/1 Parselleri" />
+	  <meta property="og:description" content="SATILIK İMARLI PARSELLER – Zafer Mahallesi | İmar: E=0.40 Hmax=2 Kat" />
+	  <meta property="og:image" content="https://68meda68hub.github.io/zafer-mah-4925-1/images/1.jpeg" />
+	  <meta property="og:url" content="https://68meda68hub.github.io/zafer-mah-4925-1/" />
+	  <meta property="og:type" content="website" />
+	  <meta property="og:locale" content="tr_TR" />
+
+	  <meta name="twitter:card" content="summary_large_image" />
+	  <meta name="twitter:title" content="Zafer Mahallesi 4925/1 Parselleri" />
+	  <meta name="twitter:description" content="SATILIK İMARLI PARSELLER – Zafer Mahallesi | İmar: E=0.40 Hmax=2 Kat" />
+	  <meta name="twitter:image" content="https://68meda68hub.github.io/zafer-mah-4925-1/images/1.jpeg" />
+  
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+
+	<script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+	<link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+	  
+	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+    body { 
+	margin:0; 
+	padding:0;
+	}
+#map { 
+	position: absolute; 
+    top: 0; 
+    bottom: 0; 
+    width: 100vw; 
+    background: radial-gradient(
+		circle at 50% 50%,
+		rgba(85, 85, 170, 0.8) 0%,    /* merkez: hafif şeffaf parlak mavi-mor */
+		rgba(68, 68, 170, 1) 15%,     /* merkeze yakın koyulaşma */
+		#222244 45%,                   /* orta alan: koyu mavi tonları */
+		#1a1a33 60%,                   /* kenar yakın: derin mavi-mor */
+		#000000 100%                    /* uç: tam siyah */
+	);
+    transition: background-color 5s ease; /* Yumuşak geçiş */
+	}
+
+#loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba (0, 0, 0, 0.5);
+    color: white; 
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    z-index: 9999;
+    white-space: nowrap;
+    opacity: 1;
+    transition: all 2s ease;
+    pointer-events: none;
+    }
+
+#loading.animate {
+    top: calc(100% - 60px);
+    transform: translate(-50%, 0);
+    opacity: 0;
+    }
+
+#loading-bottom {
+    position: fixed;
+    bottom: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: black;
+    color: white;
+    font-size: 11px;
+    padding: 5px 5px;
+    border-radius: 5px;
+    font-weight: bold;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: opacity 2s ease;
+    }
+
+#fade {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 2s;
+    z-index: 998;
+    }
+
+.mapboxgl-popup {
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+
+    .custom-popup {
+      color: #fff;
+      font-size: 11px;
+      font-weight: 500;
+      font-family: "Tahoma;
+      padding: 10px 10px;
+      background: rgba(0,0,0, 1);
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      text-align: center;
+      white-space: nowrap;
+      line-height: 14px;
+    }
+	.custom-popup {padding: 10px;}
+    .popup-subtext {
+      font-size: 10px;
+      color: #fff;
+      //font-style: italic;
+      margin-top: 4px;
+      display: block;
+    }
+	
+#zoom-level {
+	display: none;
+    position: absolute;
+    background: rgba (0, 0, 0, 0.5);
+    padding: 5px 8px;
+    margin: 10px;
+    z-index: 1;
+    border-radius: 4px;
+    font-family: Tahoma;  
+	font-size: 10px;
+	color: #fff;	
+	left: 0;
+	bottom: 25px; 
+	transition: color 0.3s ease; /* renk geçişi yumuşak olsun */
+    }	
+@media only screen and (max-width: 414px) {
+#zoom-level {
+    position: absolute;
+    background: white;
+    padding: 3px 3px;
+    margin: 10px;
+    z-index: 1;
+    border-radius: 4px;
+    font-family: Tahoma;  
+	font-size: 9px;	
+	left: 0;
+	bottom: 40px; 
+    }	
+}
+
+
+#current-time {
+    position: absolute;
+    right: 10px;
+    bottom: 42px; /* zoom-level’le aynı duracak */
+    padding: 3px 6px;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    font-family: Tahoma;
+    font-size: 10px;
+    border-radius: 4px;
+    z-index: 1;
+    transition: color 0.3s ease, background 0.3s ease;
+	}
+/* sadece ikon büyüsün */
+#current-time i {
+	font-size: 14px; /* ikon biraz büyük */
+	}
+@media only screen and (max-width: 414px) {
+	#current-time {
+    right: 10px;
+    bottom: 10px; /* zoom-level’le aynı duracak */
+    padding: 3px 6px;
+    font-size: 10px;
+    border-radius: 4px;
+    z-index: 1;
+    transition: color 0.3s ease, background 0.3s ease;
+}}
+
+
+
+
+
+
+  </style>
+</head>
+<body>
+
+	<div id="loading"><sup><i>en </i></sup>NET<i> max</i> GAYRİMENKUL</div>
+	<div id="loading-bottom"><sup><i>en </i></sup>NET<i> max</i> GAYRİMENKUL</div>
+	<div id="fade"></div>
+
+	<div id="map"></div>
+
+	<div id="zoom-level">Zoom: --</div>
+	<div id="current-time"><i class="fa-solid fa-clock"></i> --:--:--</div>
+
+
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1IjoiZ2VvZ3JhcGh5cHJvZiIsImEiOiJjanYxb2t1ZG8wNGU1NGFsNXVkcnhzNmFpIn0.M3qCJK8FYa06B-Irc6FD-g';
+
+  const initialCenter = [0, 0];
+  const initialZoom = 0;
+
+ const centerCoord = [33.992221, 38.390642];
+  const agacliLabelGeoJSON = {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [33.994635, 38.386387]
+        },
+        properties: {
+          title: "Ağaçlı Tesisleri"
+        }
+      }
+    ]
+  };
+  
+  const nesibeLabelGeoJSON = {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [33.99208, 38.388714]
+        },
+        properties: {
+          title: "Nesibe Aydın Yıldızlar Kulübü"
+        }
+      }
+    ]
+  };
+  
+  const kulturLabelGeoJSON = {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [33.998323, 38.38024]
+        },
+        properties: {
+          title: "Atatürk Kültür Merkezi"
+        }
+      }
+    ]
+  };
+  
+  const istikbalLabelGeoJSON = {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [33.985722, 38.395292]
+        },
+        properties: {
+          title: "İstikbal Nalbantoğu"
+        }
+      }
+    ]
+  };
+  
+  const hastaneLabelGeoJSON = {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [33.983937, 38.373575]
+        },
+        properties: {
+          title: "Aksaray Araştırma Hastanesi"
+        }
+      }
+    ]
+  };
+ 
+
+  const geojsonData = {
+    
+"type": "FeatureCollection",
+"features": [
+{ "type": "Feature", "properties": { "OBJECTID": 20, "ILCE": "Merkez", "MAHALLE": "Çiftlik", "PARSEL_NO": "3895/15", "DEGERI": null, "ACIKLAMA": null, "ALAN": 816.01 }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [33.992449424872405,38.390670252892598],[33.992274253752306,38.390527715619704],[33.992211087327803,38.390476267572275],[33.991995937296224,38.390652017366854],[33.992058457587305,38.390704023666665],[33.992200155163374,38.390821947082635],[33.992231646030376,38.390848150533365],[33.992449424872405,38.390670252892598] ] ] ] } }
+]
+};
+
+  let markerAdded = false;
+  let rotating = false;
+
+  const map = new mapboxgl.Map({
+    container: 'map',
+		style: {
+			version: 8,
+			sources: {},
+			layers: [],
+			glyphs: 'https://api.mapbox.com/fonts/v1/mapbox/{fontstack}/{range}.pbf?access_token=' + mapboxgl.accessToken
+    },
+    center: [0, 0],
+    zoom: 0.5,
+	projection: 'globe'
+  });
+ 
+  
+  const zoomLevelDiv = document.getElementById('zoom-level');
+
+    function updateZoomLevel() {
+        const zoom = map.getZoom().toFixed(2);
+        zoomLevelDiv.textContent = `Zoom: ${zoom}`;
+    }
+
+    map.on('load', updateZoomLevel);
+    map.on('zoom', updateZoomLevel);
+    map.on('zoomend', updateZoomLevel);
+
+  // ⏳ Yükleme ve uçuş süreci
+  
+
+  map.on('load', () => {
+  
+	// 🌍 Küre dönüş animasyonu
+  let rotating = true;
+  let rotateFrame;
+
+  function rotateGlobe() {
+    if (!rotating) return;
+    const speed = 0.2;
+    const center = map.getCenter();
+    let newLng = center.lng + speed;
+    if (newLng > 180) newLng -= 360;
+    map.jumpTo({ center: [newLng, center.lat] });
+    rotateFrame = requestAnimationFrame(rotateGlobe);
+  }
+
+  rotateGlobe();
+ 
+// ⏳ Yükleme ve uçuş süreci
+  setTimeout(() => {
+    const loading = document.getElementById('loading');
+    const loadingBottom = document.getElementById('loading-bottom');
+
+    loading.classList.add('animate');
+
+    setTimeout(() => {
+      cancelAnimationFrame(rotateFrame);
+      rotating = false;
+
+      loading.style.display = 'none';
+      loadingBottom.style.opacity = '1';
+
+      map.once('idle', () => {
+        map.flyTo({
+          center: centerCoord,
+          zoom: 17,
+          speed: 0.3,
+          curve: 1.5,
+          essential: true
+        });
+      });
+
+    }, 2000);
+  }, 3000); 
+  
+  
+    map.addSource('parcels', {
+      type: 'geojson',
+      data: geojsonData
+    });
+map.addSource('google-satellite', {
+      type: 'raster',
+      tiles: ['https://mt1.google.com/vt/lyrs=s,traffic&x={x}&y={y}&z={z}'],
+      tileSize: 256
+    });
+
+    map.addLayer({
+      id: 'google-satellite-layer',
+      type: 'raster',
+      source: 'google-satellite',
+      layout: { visibility: 'visible' }
+    });
+    // Dolgu katmanı
+    map.addLayer({
+      id: 'parcels-layer',
+      type: 'fill',
+      source: 'parcels',
+      paint: {
+        'fill-color': '#ffff00',
+        'fill-opacity': 0.7
+      },
+      minzoom: 15
+    });
+
+    // Çizgi katmanı
+    map.addLayer({
+      id: 'parcels-outline',
+      type: 'line',
+      source: 'parcels',
+      paint: {
+        'line-color': '#0000ff',
+        'line-width': 1,
+		'line-opacity': 0.4
+      },
+      minzoom: 15
+    });
+	
+	
+	
+	// 1️⃣ Yeni kaynak ekliyoruz
+map.addSource('manual-label', {
+  type: 'geojson',
+  data: {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [ 33.992221, 38.390642] // [lng, lat] şeklinde dikkat
+        }
+      }
+    ]
+  }
+});
+
+// 2️⃣ Layer ekliyoruz
+//map.addLayer({
+//  id: 'manual-label-layer',
+//  type: 'symbol',
+//  source: 'manual-label',
+//  layout: {
+//    'text-field': 'İmar Durumu\nE=0.90\nHmax=3 Kat', // İşte buradaki \n ile iki satır yaptık
+//    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+//    'text-size': 12,
+//    'text-anchor': 'center',
+//	'text-offset': [0, -5], // 👈 yazıyı yukarı taşır
+//    'text-allow-overlap': true
+//  },
+//  paint: {
+//    'text-color': '#FFD700', // sarı yazı
+//    'text-halo-color': '#000000', // siyah halo, okunabilirlik için
+//    'text-halo-width': 1.5
+//  },
+//  minzoom: 17
+//});	
+
+    // Zoom 0'dan 17'ye uçuş yerine, yukarıdaki animasyon sonrası uçuyoruz, bu yüzden burada yapmıyoruz
+
+    map.on('moveend', () => {
+      const zoom = map.getZoom();
+
+      if (zoom >= 17 && !markerAdded) {
+        markerAdded = true;
+
+		setTimeout(() => {
+        new mapboxgl.Marker({color: 'blue', scale: 0.9})
+          .setLngLat(centerCoord)
+          .addTo(map);
+		}, 10000);
+        // Slider popup
+const popup = new mapboxgl.Popup({ offset: [0, -50], closeButton: false, closeOnClick: false })
+      .setLngLat(centerCoord)
+      .setHTML(`
+        <div class="custom-popup">
+                SATILIK İMARLI PARSEL<br />
+                <span class="popup-subtext">İmar: E = 0.90 Hmax = 3 Kat</span>
+                <span class="popup-subtext">Çiftlik Mahallesi 3895/15</span>
+				<span class="popup-subtext">Villa Yapmaya Elverişli</span>
+                </div>
+      `)
+      .addTo(map);
+	  
+	  // ✅ Popup DOM elementinin yüklenmesini garanti etmek için setTimeout veya requestAnimationFrame kullan
+requestAnimationFrame(() => {
+  const closeBtn = popup.getElement().querySelector('.popup-close-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      popup.remove();
+    });
+  }
+});
+	  	  
+	 // Slider’ı başlat (popup DOM hazır olduktan sonra)
+    setTimeout(() => {
+        const popupEl = popup.getElement();
+        if (!popupEl) return;
+
+        const items = popupEl.querySelectorAll('.carousel-item');
+        const dots = popupEl.querySelectorAll('.carousel-dots .dot');
+        let current = 0;
+
+        function showSlide(index) {
+            items.forEach((item, i) => item.classList.toggle('active', i === index));
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+        }
+
+        showSlide(0);
+
+        const interval = setInterval(() => {
+            current = (current + 1) % items.length;
+            showSlide(current);
+        }, 5000);
+
+        // Popup DOM silindiğinde interval’i temizle
+        popupEl.closest('.mapboxgl-popup').addEventListener('remove', () => {
+            clearInterval(interval);
+        });
+
+    }, 200); // 200ms beklemek DOM’un hazır olması için yeterli
+	 
+        setTimeout(() => {
+          const popupEl = popup.getElement();
+          if (popupEl) popupEl.style.opacity = '1';
+        }, 10000);
+
+        if (!map.getLayer('parcels-labels')) {
+          map.addLayer({
+            id: 'parcels-labels',
+            type: 'symbol',
+            source: 'parcels',
+            layout: {
+				'text-field': [
+				'concat',
+				['to-string', ['get', 'ALAN']],' m²'],
+				'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+				'text-size': 10,
+				'text-anchor': 'center',
+				'text-allow-overlap': true
+            },
+            paint: {
+            'text-color': '#FFD700', // sarı yazı
+			'text-halo-color': '#000000', // siyah halo, okunabilirlik için
+			'text-halo-width': 1.5
+            },
+            minzoom: 15
+          });
+        }
+
+        setTimeout(() => {
+          if (map.getLayer('parcels-labels')) {
+            map.removeLayer('parcels-labels', 'manual-label-layer');
+          }
+        }, 9000);
+
+        setTimeout(() => {
+          map.flyTo({
+            zoom: 15,
+            pitch: 45,
+            speed: 0.1,
+            curve: 1.8,
+            essential: true
+          });
+        }, 10000);
+      }
+
+      if (Math.round(zoom) === 15 && !rotating) {
+        rotating = true;
+
+        let startBearing = map.getBearing();
+        const duration = 30000;
+        let startTime;
+
+        function rotate(timestamp) {
+          if (!startTime) startTime = timestamp;
+          const elapsed = timestamp - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const currentBearing = startBearing + progress * 360;
+
+          map.setBearing(currentBearing);
+
+          if (progress < 1) {
+            requestAnimationFrame(rotate);
+          }
+        }
+
+        setTimeout(() => requestAnimationFrame(rotate), 1000);
+      }
+    });
+	
+	
+	map.addSource('agacli-label', {
+      type: 'geojson',
+      data: agacliLabelGeoJSON
+    });
+
+    map.addLayer({
+      id: 'agacli-label-layer',
+      type: 'symbol',
+      source: 'agacli-label',
+      layout: {
+        'text-field': ['get', 'title'],
+        'text-size': 12,
+        'text-offset': [0, 0.6],
+        'text-anchor': 'top',
+        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+        'text-allow-overlap': true
+      },
+      paint: {
+        'text-color': '#ffffff',
+        'text-halo-color': '#0000ff',
+        'text-halo-width': 1
+      },
+      minzoom: 15 // istersen görünmesi için minimum zoom
+    });
+	
+	map.addSource('nesibe-label', {
+      type: 'geojson',
+      data: nesibeLabelGeoJSON
+    });
+
+    map.addLayer({
+      id: 'nesibe-label-layer',
+      type: 'symbol',
+      source: 'nesibe-label',
+      layout: {
+        'text-field': ['get', 'title'],
+        'text-size': 12,
+        'text-offset': [0, 0.6],
+        'text-anchor': 'top',
+        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+        'text-allow-overlap': true
+      },
+      paint: {
+        'text-color': '#ffffff',
+        'text-halo-color': '#0000ff',
+        'text-halo-width': 1
+      },
+      minzoom: 15 // istersen görünmesi için minimum zoom
+    });
+	
+	map.addSource('kultur-label', {
+      type: 'geojson',
+      data: kulturLabelGeoJSON
+    });
+
+    map.addLayer({
+      id: 'kultur-label-layer',
+      type: 'symbol',
+      source: 'kultur-label',
+      layout: {
+        'text-field': ['get', 'title'],
+        'text-size': 12,
+        'text-offset': [0, 0.6],
+        'text-anchor': 'top',
+        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+        'text-allow-overlap': true
+      },
+      paint: {
+        'text-color': '#ffffff',
+        'text-halo-color': '#0000ff',
+        'text-halo-width': 1
+      },
+      minzoom: 15 // istersen görünmesi için minimum zoom
+    });
+	
+	map.addSource('istikbal-label', {
+      type: 'geojson',
+      data: istikbalLabelGeoJSON
+    });
+
+    map.addLayer({
+      id: 'istikbal-label-layer',
+      type: 'symbol',
+      source: 'istikbal-label',
+      layout: {
+        'text-field': ['get', 'title'],
+        'text-size': 12,
+        'text-offset': [0, 0.6],
+        'text-anchor': 'top',
+        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+        'text-allow-overlap': true
+      },
+      paint: {
+        'text-color': '#ffffff',
+        'text-halo-color': '#0000ff',
+        'text-halo-width': 1
+      },
+      minzoom: 15 // istersen görünmesi için minimum zoom
+    });
+	
+	map.addSource('hastane-label', {
+      type: 'geojson',
+      data: hastaneLabelGeoJSON
+    });
+
+    map.addLayer({
+      id: 'hastane-label-layer',
+      type: 'symbol',
+      source: 'hastane-label',
+      layout: {
+        'text-field': ['get', 'title'],
+        'text-size': 12,
+        'text-offset': [0, 0.6],
+        'text-anchor': 'top',
+        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+        'text-allow-overlap': true
+      },
+      paint: {
+        'text-color': '#ffffff',
+        'text-halo-color': '#0000ff',
+        'text-halo-width': 1
+      },
+      minzoom: 15 // istersen görünmesi için minimum zoom
+    });
+	
+	
+
+map.on('zoom', () => {
+    const zoomLevel = map.getZoom();
+    const zoomEl = document.getElementById('zoom-level');
+    
+    zoomEl.textContent = `Zoom: ${zoomLevel.toFixed(1)}`;
+
+    if (zoomLevel >= 17) {
+        zoomEl.style.color = '#000';
+        zoomEl.style.background = 'rgba(255,255,255,1)'; // beyaz arka plan
+    } else {
+        zoomEl.style.color = '#fff';
+        zoomEl.style.background = 'rgba(0,0,0,0.5)'; // siyah arka plan
+    }
+});
+
+function updateTime() {
+  const now = new Date();
+  const timeString = now.toLocaleTimeString('tr-TR');
+  document.getElementById('current-time').innerHTML = `<i class="fa-solid fa-clock"></i> ${timeString}`;
+}
+
+setInterval(updateTime, 1000);
+updateTime();
+
+
+// Başlangıçta hemen güncelle
+updateTime();
+// Her saniye tekrar
+setInterval(updateTime, 1000);
+
+
+
+
+	
+  });
+</script>
+</body>
+</html>
